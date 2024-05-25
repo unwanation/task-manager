@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:task_manager/providers/auth_provider.dart';
 import 'package:task_manager/providers/task_provider.dart';
-import 'package:task_manager/screens/home_screen.dart';
-import 'package:task_manager/screens/new_task_screen.dart';
+import 'package:task_manager/routes.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MainApp());
 }
 
@@ -13,19 +14,23 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => TaskProvider(),
-      child: MaterialApp(
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => AuthProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => TaskProvider(),
+        ),
+      ],
+      builder: (context, child) => MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Task Manager',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        initialRoute: '/',
-        routes: {
-          '/': (ctx) => const HomeScreen(),
-          '/new-task': (ctx) => NewTaskScreen(),
-          // Add more routes if needed
-        },
+        initialRoute: Routes.getInitial(context),
+        routes: Routes.routes,
       ),
     );
   }
