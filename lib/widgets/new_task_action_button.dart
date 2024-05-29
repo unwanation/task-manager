@@ -5,11 +5,12 @@ class NewTaskActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton(
+    return FloatingActionButton.extended(
+      label: const Text('New Task'),
       onPressed: () {
         Navigator.of(context).pushNamed('/new-task');
       },
-      child: const Icon(Icons.add),
+      icon: const Icon(Icons.add),
     );
   }
 }

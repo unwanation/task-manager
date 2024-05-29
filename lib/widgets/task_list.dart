@@ -13,12 +13,11 @@ class TaskList extends StatelessWidget {
       itemBuilder: (ctx, index) {
         final task = tasks[index];
         return TaskTile(
+          taskId: task.id,
           name: task.name,
           status: task.status,
           deadline: task.deadline,
-          onChanged: (value) {
-            // Implement task completion logic
-          },
+          onChanged: (value) {},
         );
       },
     );

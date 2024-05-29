@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:task_manager/providers/auth_provider.dart';
 import 'package:task_manager/services/auth_service.dart';
 import 'package:task_manager/utils/validator.dart';
 
@@ -53,19 +51,17 @@ class RegistrationFormState extends State<RegistrationForm> {
             style: ElevatedButton.styleFrom(
               minimumSize: const Size.fromHeight(50),
             ),
-            onPressed: () {
+            onPressed: () async {
               if (_formKey.currentState!.validate()) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Processing Data')),
                 );
 
-                AuthService.register(_name.text, _email.text, _pass.text);
-
-                dynamic tokens = AuthService.login(_email.text, _pass.text);
-
-                Provider.of<AuthProvider>(context).updateTokens(tokens);
-
-                Navigator.of(context).pushNamed('/home');
+                await AuthService.register(_name.text, _email.text, _pass.text);
+                await AuthService.loadTokens();
+                if (context.mounted) {
+                  Navigator.of(context).pushNamed('/');
+                }
               }
             },
             child: const Text('Submit'),

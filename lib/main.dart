@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:task_manager/providers/auth_provider.dart';
-import 'package:task_manager/providers/task_provider.dart';
+import 'package:task_manager/providers/user_provider.dart';
 import 'package:task_manager/routes.dart';
+import 'package:task_manager/services/auth_service.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MainApp());
+  await AuthService.loadTokens();
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => UserProvider(),
+        ),
+      ],
+      child: const MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {
@@ -14,24 +24,14 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) => AuthProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => TaskProvider(),
-        ),
-      ],
-      builder: (context, child) => MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Task Manager',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        initialRoute: Routes.getInitial(context),
-        routes: Routes.routes,
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Task Manager',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
+      initialRoute: Routes.getInitial(),
+      routes: Routes.routes,
     );
   }
 }

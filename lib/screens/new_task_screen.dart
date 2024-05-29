@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:task_manager/models/task.dart';
-import 'package:task_manager/providers/task_provider.dart';
+import 'package:task_manager/providers/user_provider.dart';
+import 'package:task_manager/services/task_service.dart';
 
-class NewTaskScreen extends StatelessWidget {
-  final TextEditingController _taskController = TextEditingController();
+class NewTaskScreen extends StatefulWidget {
+  const NewTaskScreen({super.key});
+
+  @override
+  State<NewTaskScreen> createState() => _NewTaskScreenState();
+}
+
+class _NewTaskScreenState extends State<NewTaskScreen> {
+  final _taskController = TextEditingController();
 
   void _addTask(BuildContext context) {
     final taskText = _taskController.text;
     if (taskText.isNotEmpty) {
-      Provider.of<TaskProvider>(context, listen: false).addTask(Task(
-        id: ++Task.nextId,
-        name: taskText,
-        status: false,
-        deadline: 36000,
-      ));
+      TaskService.addTask(
+          Provider.of<UserProvider>(context, listen: false).currentSpaceId,
+          taskText);
+      Provider.of<UserProvider>(context, listen: false).fetchUser();
       Navigator.of(context).pop();
     }
   }
-
-  NewTaskScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

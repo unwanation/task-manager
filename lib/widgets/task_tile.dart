@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/services/task_service.dart';
 
 class TaskTile extends StatelessWidget {
+  final int taskId;
   final String name;
   final bool status;
   final int deadline;
@@ -8,6 +10,7 @@ class TaskTile extends StatelessWidget {
 
   const TaskTile({
     super.key,
+    required this.taskId,
     required this.name,
     required this.status,
     required this.deadline,
@@ -18,10 +21,12 @@ class TaskTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(name),
-      leading: Checkbox(
-        onChanged: onChanged,
-        value: status,
-      ),
+      subtitle: Text('${(deadline / 3600).round()} hours'),
+      trailing: IconButton(
+          onPressed: () {
+            TaskService.deleteTask(taskId);
+          },
+          icon: const Icon(Icons.delete)),
     );
   }
 }

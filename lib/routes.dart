@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:task_manager/providers/auth_provider.dart';
 import 'package:task_manager/screens/home_screen.dart';
 import 'package:task_manager/screens/login_screen.dart';
 import 'package:task_manager/screens/new_task_screen.dart';
 import 'package:task_manager/screens/registration_screen.dart';
+import 'package:task_manager/services/auth_service.dart';
 
 class Routes {
   static const String home = '/';
@@ -19,9 +18,7 @@ class Routes {
     newTask: (context) => NewTaskScreen(),
   };
 
-  static String getInitial(context) {
-    return Provider.of<AuthProvider>(context).user == null
-        ? registration
-        : home;
+  static String getInitial() {
+    return AuthService.isLoggedIn ? home : registration;
   }
 }
